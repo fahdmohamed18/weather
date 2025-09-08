@@ -15,7 +15,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&family=Righteous&display=swap"
         rel="stylesheet">
-      <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">   
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">   
         <!-- *============= Fontawsome ============= -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- *============= CSS files ============= -->
@@ -25,101 +25,69 @@
 </head>
 <body>
       <!-- ?========= Start Navbar ========= -->
-      <nav class="navbar navbar-expand-lg ">
-        <div class="container">
-            <a class="navbar-brand d-flex justify-content-center align-items-center" href="/index.html">
-                <img src="images/logo.png" alt="Weather logo" class="logo">
-                <div class="logo-info">
-                    <h1 class="site-title">Weather</h1>
-                    <span class="site-description">tagline goes here</span>
-                </div>
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <!-- <span class="navbar-toggler-icon"></span> -->
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse mt-4 my-lg-0" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center">
-                    <li class="nav-item active"><a class="nav-link" href='#'>Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">News</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Live cameras</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Photos</a></li>
-                    <li class="nav-item"><a class="nav-link" target="_blank" href='./contact.html'>Contact</a></li>
-                </ul>
-            </div>
+  <!-- Navbar -->
+	<nav class="navbar navbar-expand-lg  navbar-dark p-4">
+		<div class="container w-75">
+		  <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="./images/logo.png" alt="Logo" width="64" height="38" class="me-2">
+        <div class="logo-type">
+          <h1 class="site-title mb-0">Weather</h1>
+          <p class="site-description mt-0 mb-0">tagline goes here</p>
         </div>
-    </nav>
+      </a>
+		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ms-auto flex justify-content-center align-items-center">
+			  <li class="nav-item">
+				<a class="nav-link active" aria-current="page" href="#">Home</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">News</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">Live cameras</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">Photos</a>
+			  </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">Contacts</a>
+          </li>
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+ 
 
+ <main>
+   <!-- Hero Section -->
+   <div class="hero-section d-flex justify-content-center align-items-center">
+   
+   
+        
+              <div class="input-group w-75  position-relative mt-2">
+                  <input type="text" class="w-100" placeholder="Enter your city..." id="findLocation">
+                  <button class="btn btn-primary" type="button" id="find">Find</button>
+              </div>
+         
+   
+    
+</div>
+  
+  <!-- Cards Section -->
+ <section id="cards" class="">
+  <div class="container">
+    <div class="row" id="row-data"> 
+  
+     
+         
+       </div> 
+     </div>
+ </section>
 
-     <!-- ?========= Start hero ========= -->
-    <section class="hero ">
-        <div class=" container">
-            <form class="find-form position-relative">
-                <input id="findInput" class="form-control w-100" type="text" placeholder="Find your location...">
-                <!-- <input id="submit" class=" btn-find position-absolute" type="button" value="Find"> -->
-                <button id="btnFind" class=" btn-find position-absolute" type="button">Find</button>
-            </form>
-        </div>
-    </section>
-
-      <!-- ?========= Start forecast table ========= -->
-      <div class="forecast-table">
-        <div class="container">
-            <div id="forecast" class="row  rounded-3 forecast-container">
-                <!--^ today -->
-                <div class="col-lg-4">
-                    <div class=" forecast today rounded  rounded-3">
-                        <div id="today" class="forecast-header px-3  d-flex justify-content-between">
-                            <div class="day fw-semibold"></div>
-                            <div class="date text-light"></div>
-                        </div>
-                        <div id="current" class="forecast-content  px-3">
-                            <div class="location fs-4"></div>
-                            <div class="time me-auto"></div>
-                            <div class="degree d-flex justify-content-between">
-                                <div class="num"></div>
-                                <div class="forecast-icon align-self-end"> </div>
-                            </div>
-                            <p class="custom fs-5"></p>
-                            <div class=" mt-4 d-flex justify-content-between">  </div>
-                        </div>
-                    </div>
-                </div>
-                <!--^ tomorrow -->
-                <div id="tomorrow" class="col-lg-4 mt-3 mt-lg-0">
-                    <div class="text-center h-100 rounded-2 forecast tomorrow">
-                        <div class="forecast-header fw-semibold px-3">
-                            <div class="day"></div>
-                        </div>
-                        <div class="forecast-content px-3">
-                            <div class="forecast-icon">
-                            </div>
-                            <div class="degree fs-2"></div>
-                            <p class="fs-5 mb-0"></p>
-                            <p class="custom fs-5"></p>
-                        </div>
-                    </div>
-                </div>
-                <!--^ afterTomorrow -->
-                <div id="afterTomorrow" class="col-lg-4 mt-3 mt-lg-0">
-                    <div class="text-center h-100 rounded-2 forecast">
-                        <div class="forecast-header fw-semibold px-3">
-                            <div class="day"></div>
-                        </div>
-                        <div class="forecast-content px-3">
-                            <div class="forecast-icon"></div>
-                            <div class="degree fs-2"></div>
-                            <p class="fs-5 mb-0"></p>
-                            <p class="custom fs-5"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ </main>
 
       <!-- ?========= Start About ========= -->
     <section class=" pt-5 py-lg-5 w-100 d-flex justify-content-center align-items-center">

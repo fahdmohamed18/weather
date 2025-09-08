@@ -1,183 +1,96 @@
-// ?=============== HTML ELEMENT ===============
-const navLinks = Array.from(document.querySelectorAll('.nav-item'));
-const btnFind = document.querySelector('#btnFind');
-const findInput = document.querySelector('#findInput');
-const forecast = document.querySelector('#forecast');
 
-// ^=============== APP VARIABLES ===============
-// weather API
-const APIKey = '0504276985d1463eaa6155223233112';
-const baseURL = 'https://api.weatherapi.com/v1/forecast.json';
+//62162d74ff324b0caaa22640240912
+//https://api.weatherapi.com/v1/forecast.json?q=cairo&days=3&key=62162d74ff324b0caaa22640240912
 
-let searchLocation = '';
-let weatherList = {};
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-getUserCity(); // Call the function to get the user's city
+const searchInput = document.getElementById('findLocation')
 
-// *=============== JS FUNCTIONS HELPERS ===============
-function toggleCssClass(el, className, condition) {
-    condition ? el.classList.add(className) : el.classList.remove(className);
+
+searchInput.addEventListener('input',function(e){
+    console.log(e.target.value)
+    getWeather(e.target.value)
+})
+
+async function getWeather(cityName){
+   if(cityName.length>2){
+    let response = await fetch(`https://api.weatherapi.com/v1/forecast.json?q=${cityName}&days=3&key=62162d74ff324b0caaa22640240912`)
+    // console.log(response)
+    let data = await response.json()
+    console.log(data)
+    displayData(data)
+   }
+
 }
 
-function handleDay(dateString) {
-    let d = new Date(dateString);
-    let dayName = days[d.getDay()];
-    return dayName;
-}
-function handleMonth(dateString) {
-    let d = new Date(dateString);
-    let monthName = monthNames[d.getMonth()];
-    return monthName;
-}
+//Date
 
-function normalizeCityName(cityName) {
-    return cityName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+// let date = new Date('2025-6-30')
 
+// console.log(date.getDate()) //يوم كام في الشهر
 
-function getUserCity() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            try {
-                let response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
-                let data = await response.json();
-                data.city ? searchLocation = normalizeCityName(data.city) : searchLocation = 'Fayoum';
-                displayWeather();
-            } catch (err) {
-                console.log("Error fetching geolocation data:", err);
-                searchLocation = 'Fayoum';
-                displayWeather();
+// console.log(date.getMonth()+1) //شهر كام في السنة
 
-            }
-        }, (error) => {
-            if (error.code === error.PERMISSION_DENIED) {
-                console.log("User denied the request for Geolocation.");
-            } else {
-                console.log("Error getting user location:", error.message);
-            }
-            searchLocation = 'Fayoum';
-            displayWeather();
-        });
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-        searchLocation = 'Fayoum';
-        displayWeather();
-    }
-}
+// console.log(date.getFullYear()) //يطبع السنة
 
-// ^=============== JS FUNCTIONS ===============
-function handleActiveNavLink(linksArr, link) {
-    linksArr.forEach(l => toggleCssClass(l, 'active', false));
-    toggleCssClass(link, 'active', true);
-}
+// console.log(date.toLocaleString('en-us',{weekday:'long'})) //بيطبع اسم اليوم كامل
+// console.log(date.toLocaleString('en-us',{weekday:'short'}))
+// console.log(date.toLocaleString('en-us',{weekday:'narrow'}))
+
+// console.log(date.toLocaleString('en-us',{month:'long'}))
+// console.log(date.toLocaleString('en-us',{month:'short'}))
+// console.log(date.toLocaleString('en-us',{month:'narrow'}))
 
 
-async function getWeather(searchLocation) {
-    try {
-        let response = await fetch(`${baseURL}?key=${APIKey}&q=${searchLocation}&days=3`);
-        if (response.ok && response.status === 200) { return await response.json(); }
-    } catch (e) {
-        console.log("An error occurred:", e);
-    }
-}
+function displayData(weatherData){
+console.log(weatherData.forecast.forecastday)
+let forecastArr = weatherData.forecast.forecastday;
+let cartoona =''
+for(let i=0;i<forecastArr.length;i++){
+    let dayDate = new Date(forecastArr[i].date)
+    // console.log(dayDate)
+    let dayDateName = dayDate.toLocaleString('en-us',{weekday:'long'})
+    let dayNum = dayDate.getDate()
+    let monthName =dayDate.toLocaleString('en-us',{month:'long'})
 
-
-async function displayWeather() {
-    weatherList = await getWeather(searchLocation);
-    if (!weatherList) { return; }
-    let currentObj = weatherList.current;
-    let locationObj = weatherList.location;
-    let forecastArr = weatherList.forecast.forecastday;
-    let weatherContainer = `
-       <!--^ today -->
-      <div class="col-lg-4">
-          <div class=" forecast today rounded  rounded-3">
-              <div id="today" class="forecast-header px-3  d-flex justify-content-between">
-                  <div class="day fw-semibold">${handleDay(locationObj.localtime)}</div>
-                  <div class="date text-light">${new Date(locationObj.localtime.split(' ')[0]).getDay()} ${handleMonth(locationObj.localtime.split(' ')[0])}</div>
-                  </div>
-                  <div id="current" class="forecast-content  px-3">
-                  <div class="location fs-4">${locationObj.country},${locationObj.name}</div>
-                  <div class="time me-auto">update: ${locationObj.localtime.split(' ')[1]}</div>
-                  <div class="degree d-flex justify-content-between mt-2">
-                      <div class="num">${currentObj.temp_c}<sup>o</sup>C</div>
-                      <div class="forecast-icon align-self-end">
-                          <img src=${currentObj.condition.icon} alt="" width="90">
-                      </div>
-                  </div>
-                  <p class="custom fs-5">${currentObj.condition.text}</p>
-                  <div class=" mt-4 d-flex justify-content-between">
-                      <span class="fs-5"><img class="me-2" src="./assets/img/icon-umberella.png"
-                              alt="">${currentObj.wind_degree}%</span>
-                      <span class="fs-5"><img class="me-2" src="./assets/img/icon-wind.png"
-                              alt="">${currentObj.wind_kph}km/h</span>
-                      <span class="fs-5"><img class="me-2" src="./assets/img/icon-compass.png"
-                              alt="">${currentObj.wind_dir}</span>
-                  </div>
-              </div>
+    // console.log(dayDateName,dayNum,monthName)
+    cartoona+=`
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="forecast-card p-4 rounded-3 ${i==1?'bg-custom-two':'bg-custom'} text-white h-100">
+          <div class=" d-flex ${i==0?'justify-content-between':'justify-content-center'} mb-2">
+          <div>${dayDateName}</div>
+          <div>${i==0?dayNum+' '+monthName:''}</div>
           </div>
-      </div>
-      <!--^ tomorrow -->
-      <div id="tomorrow" class="col-lg-4 mt-3 mt-lg-0">
-          <div class="text-center h-100 rounded-2 forecast tomorrow">
-              <div class="forecast-header fw-semibold px-3">
-                  <div class="day">${handleDay(forecastArr[1].date)}</div>
-              </div>
-              <div class="forecast-content px-3">
-                  <div class="forecast-icon">
-                      <img src=${forecastArr[1].day.condition.icon} alt="weather icon"
-                          width="90">
-                  </div>
-                  <div class="degree fs-2">${forecastArr[1].day.maxtemp_c}<sup>o</sup>C</div>
-                  <p class="fs-5 mb-0">${forecastArr[1].day.mintemp_c}<sup>o</sup></p>
-                  <p class="custom fs-5">${forecastArr[1].day.condition.text}</p>
-              </div>
-          </div>
-      </div>
-      <!--^ afterTomorrow -->
-      <div id="afterTomorrow" class="col-lg-4 mt-3 mt-lg-0">
-          <div class="text-center h-100 rounded-2 forecast">
-              <div class="forecast-header fw-semibold px-3">
-                  <div class="day">${handleDay(forecastArr[2].date)}</div>
-              </div>
-              <div class="forecast-content px-3">
-                  <div class="forecast-icon">
-                      <img src=${forecastArr[1].day.condition.icon} alt="weather icon"
-                          width="90">
-                  </div>
-                  <div class="degree fs-2">${forecastArr[2].day.maxtemp_c}<sup>o</sup>C</div>
-                  <p class="fs-5 mb-0">${forecastArr[2].day.mintemp_c}<sup>o</sup></p>
-                  <p class="custom fs-5">${forecastArr[2].day.condition.text}</p>
-              </div>
-          </div>
-      </div>
-  `
-    forecast.innerHTML = weatherContainer;
+          <div>${i==0?weatherData.location.name:''}</div>
+          <div class="d-flex flex-column ${i==0?'align-items-start':'align-items-center'}">
+             <div class="fs-1 ${i==0?'':'order-2'}"><span id="todayTemp">${forecastArr[i].day.maxtemp_c}
+             </span><sup>o</sup>C </div> 
+              <div class="fs-5 ${i==0?'d-none':'d-block order-2'}"><span id="todayTemp">${i==0?'':forecastArr[i].day.mintemp_c}
+             </span><sup>o</sup>C </div>
+             
+<div class="${i==0?'':'order-1'}">
+                  <img src="https:${forecastArr[i].day.condition.icon}"  alt="" class='w-100'>
+
+</div>               
+         
+        
+          <div class="text-primary order-3" id="todayCondition">${forecastArr[i].day.condition.text}</div>
+           </div>
+        ${i==0?`  <img src="./images/icon-umberella.png" class="w-20 me-1" alt=""><span id="humidity">${weatherData.current.humidity}%</span>
+          <img src="./images/icon-wind.png" class="w-20 me-1" alt=""><span id="wind-speed">${weatherData.current.wind_kph}km/h</span>
+          <img src="./images/icon-compass.png" class="w-20 me-1" alt=""><span id="wind-dir">${weatherData.current.wind_dir}</span>`:''}
+      
+      </div></div>  
+    `
+
+}
+document.getElementById('row-data').innerHTML = cartoona
 }
 
-
-// &=============== EVENTS ===============
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        handleActiveNavLink(navLinks, e.target.parentNode);
-    });
-});
-
-btnFind.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (findInput.value) {
-        searchLocation = findInput.value;
-        displayWeather();
-    }
-});
-findInput.addEventListener('keyup', (e) => {
-    e.preventDefault();
-    if (findInput.value) {
-        searchLocation = findInput.value;
-        displayWeather();
-    }
-});
+if(navigator.geolocation){
+   navigator.geolocation.getCurrentPosition(function(position){
+    console.log(position)
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude
+    getWeather(`${lat},${lon}`)
+   })
+}
